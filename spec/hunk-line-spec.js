@@ -42,7 +42,7 @@ describe("HunkLine", function() {
     waitsForPromise(() => refresh())
   })
 
-  it("roundtrips toString and fromString", function() {
+  it("roundtrips toString and HunkLine.fromString", function() {
     let line = '  89 --- - # default, the type it should be, etc. A simple example:'
     let hunkLine = HunkLine.fromString(line)
     expect(hunkLine.toString()).toEqual(line)
@@ -64,7 +64,18 @@ describe("HunkLine", function() {
     expect(hunkLine.toString()).toEqual(line)
   })
 
-  it("can be staged and unstaged with ::stage() and ::unstage()", function() {
+  it("emits and event when HunkLine::fromString() is called", function() {
+    let changeHandler = jasmine.createSpy()
+    let line = '  89 --- - # default, the type it should be, etc. A simple example:'
+    let hunkLine = new HunkLine
+
+    hunkLine.onDidChange(changeHandler)
+    hunkLine.fromString(line)
+    expect(changeHandler).toHaveBeenCalled()
+    expect(hunkLine.toString()).toEqual(line)
+  })
+
+  fit("can be staged and unstaged with ::stage() and ::unstage()", function() {
     const diff = fileList.getFileDiffFromPathName(fileName)
     expect(diff).not.toBeUndefined()
 
@@ -90,6 +101,7 @@ describe("HunkLine", function() {
 
     waitsForPromise(() => line.unstage())
     runs(() => {
+      console.log(repoPath)
       expect(line.isStaged()).toEqual(false)
     })
   })

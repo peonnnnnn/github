@@ -23,6 +23,8 @@ describe("HunkLine", function() {
   const fileName = 'README.md'
   let filePath = null
 
+  let refresh = null
+
   beforeEach(() => {
     repoPath = copyRepository()
 
@@ -32,8 +34,12 @@ describe("HunkLine", function() {
     // TODO: This makes me feel gross inside.
     GitService.instance().repoPath = repoPath
 
-    fileList = new FileList()
-    waitsForPromise(() => fileList.loadFromGitUtils())
+    refresh = () => {
+      fileList = new FileList()
+      return fileList.loadFromGitUtils()
+    }
+
+    waitsForPromise(() => refresh())
   })
 
   it("roundtrips toString and fromString", function() {
@@ -75,6 +81,11 @@ describe("HunkLine", function() {
     waitsForPromise(() => line.stage())
     runs(() => {
       expect(line.isStaged()).toEqual(true)
+    })
+
+    waitsForPromise(() => refresh())
+    runs(() => {
+      
     })
 
     waitsForPromise(() => line.unstage())

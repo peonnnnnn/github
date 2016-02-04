@@ -76,27 +76,7 @@ describe("HunkLine", function() {
   })
 
   fit("can be staged and unstaged with ::stage() and ::unstage()", function() {
-    const diff = fileList.getFileDiffFromPathName(fileName)
-    expect(diff).not.toBeUndefined()
-
-    const hunks = diff.getHunks()
-    expect(hunks.length).toEqual(1)
-
-    const hunk = hunks[0]
-    const lines = hunk.getLines()
-    expect(lines.length).toEqual(21)
-
-    const line = lines[0]
-    expect(line.isStaged()).toEqual(false)
-
-    waitsForPromise(() => line.stage())
-    runs(() => {
-      console.log(repoPath)
-      expect(line.isStaged()).toEqual(true)
-    })
-
-    waitsForPromise(() => refresh())
-    runs(() => {
+    const getLine = (lineNumber) => {
       const diff = fileList.getFileDiffFromPathName(fileName)
       expect(diff).not.toBeUndefined()
 
@@ -107,7 +87,21 @@ describe("HunkLine", function() {
       const lines = hunk.getLines()
       expect(lines.length).toEqual(21)
 
-      const line = lines[0]
+      return lines[lineNumber]
+    }
+
+    const line = getLine(0)
+    expect(line.isStaged()).toEqual(false)
+
+    waitsForPromise(() => line.stage())
+    runs(() => {
+      console.log(repoPath)
+      expect(line.isStaged()).toEqual(true)
+    })
+
+    waitsForPromise(() => refresh())
+    runs(() => {
+      const line = getLine(0)
       expect(line.isStaged()).toEqual(true)
       console.log(repoPath)
     })

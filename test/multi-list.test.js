@@ -3,7 +3,7 @@
 import MultiList from '../lib/multi-list'
 
 describe('MultiList', () => {
-  describe('constructing a MultiList instance', () => {
+  describe.only('constructing a MultiList instance', () => {
     let ml
     beforeEach(() => {
       ml = new MultiList([
@@ -15,14 +15,14 @@ describe('MultiList', () => {
 
     it('marks first list as selected, as well as its first item', () => {
       assert.equal(ml.getSelectedListIndex(), 0)
-      assert.equal(ml.getSelectedItemIndexForList(0), 0)
-      assert.equal(ml.getSelectedItem(), 'a')
+      assert.equal([...ml.getSelectedItemIndexSetForList(0)], [0])
+      assert.equal(ml.getSelectedItems(), ['a'])
     })
 
     it('selects the first item from each list', () => {
-      assert.equal(ml.getSelectedItemIndexForList(0), 0)
-      assert.equal(ml.getSelectedItemIndexForList(1), 0)
-      assert.equal(ml.getSelectedItemIndexForList(2), 0)
+      assert.equal(ml.getSelectedItemIndexesForList(0), [0])
+      assert.equal(ml.getSelectedItemIndexesForList(1), [0])
+      assert.equal(ml.getSelectedItemIndexesForList(2), [0])
     })
   })
 

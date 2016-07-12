@@ -23,7 +23,7 @@ describe('GithubPackage', () => {
     atomEnv.destroy()
   })
 
-  describe('activate', () => {
+  describe('activate()', () => {
     it('updates the active repository', async () => {
       const workdirPath1 = copyRepositoryDir()
       const workdirPath2 = copyRepositoryDir()
@@ -39,7 +39,7 @@ describe('GithubPackage', () => {
     })
   })
 
-  describe('didChangeProjectPaths', () => {
+  describe('didChangeProjectPaths()', () => {
     it('updates the active repository', async () => {
       const workdirPath1 = copyRepositoryDir()
       const workdirPath2 = copyRepositoryDir()
@@ -82,7 +82,7 @@ describe('GithubPackage', () => {
     })
   })
 
-  describe('didChangeActivePaneItem', () => {
+  describe('didChangeActivePaneItem()', () => {
     it('updates the active repository', async () => {
       const workdirPath1 = copyRepositoryDir()
       const workdirPath2 = copyRepositoryDir()
@@ -104,7 +104,7 @@ describe('GithubPackage', () => {
     })
   })
 
-  describe('updateActiveRepository', () => {
+  describe('updateActiveRepository()', () => {
     it('updates the active repository based on the most recent active item with a path unless its directory has been removed from the project', async () => {
       const workdirPath1 = copyRepositoryDir()
       const workdirPath2 = copyRepositoryDir()
@@ -187,7 +187,7 @@ describe('GithubPackage', () => {
   })
 
   describe('when the changed files label in the status bar is clicked', () => {
-    it('shows/hides the git panel', async () => {
+    it('toggles the git panel', async () => {
       const workdirPath = copyRepositoryDir()
       project.setPaths([workdirPath])
       await workspace.open(path.join(workdirPath, 'a.txt'))
@@ -203,7 +203,7 @@ describe('GithubPackage', () => {
     })
   })
 
-  describe('when the git:toggle-git-panel command is dispatched', () => {
+  describe('toggleGitPanel()', () => {
     it('shows-and-focuses or hides the git panel', async () => {
       const workspaceElement = viewRegistry.getView(workspace)
       document.body.appendChild(workspaceElement)
@@ -213,15 +213,15 @@ describe('GithubPackage', () => {
       await githubPackage.activate()
 
       assert.equal(workspace.getRightPanels().length, 0)
-      commandRegistry.dispatch(workspaceElement, 'git:toggle-git-panel')
+      githubPackage.toggleGitPanel()
       assert.equal(workspace.getRightPanels().length, 1)
       assert.equal(workspace.getRightPanels()[0].item, githubPackage.gitPanelController)
       assert(githubPackage.gitPanelController.refs.gitPanel.refs.stagingView.isFocused())
 
-      commandRegistry.dispatch(workspaceElement, 'git:toggle-git-panel')
+      githubPackage.toggleGitPanel()
       assert.equal(workspace.getRightPanels().length, 0)
 
-      commandRegistry.dispatch(workspaceElement, 'git:toggle-git-panel')
+      githubPackage.toggleGitPanel()
       assert.equal(workspace.getRightPanels().length, 1)
       assert.equal(workspace.getRightPanels()[0].item, githubPackage.gitPanelController)
       assert(githubPackage.gitPanelController.refs.gitPanel.refs.stagingView.isFocused())

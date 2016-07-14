@@ -1,4 +1,9 @@
-language: objective-c
+sudo: false
+
+language: node_js
+
+node_js:
+  - "6.1"
 
 env:
   - ATOM_CHANNEL=beta
@@ -8,12 +13,13 @@ notifications:
     on_success: never
     on_failure: change
 
-install:
-  - git clone https://github.com/creationix/nvm.git /tmp/.nvm
-  - source /tmp/.nvm/nvm.sh
-  - nvm install 4.4.7
-  - nvm use --delete-prefix 4.4.7
-  - npm install -g npm
-
 script:
   - ./script/cibuild
+
+addons:
+  apt:
+    packages:
+    - build-essential
+    - git
+    - libgnome-keyring-dev
+    - fakeroot

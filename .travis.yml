@@ -6,7 +6,7 @@ node_js:
   - "4.4.7"
 
 env:
-  - ATOM_CHANNEL=beta
+  - ATOM_CHANNEL=beta CXX=g++-4.8
 
 notifications:
   email:
@@ -21,8 +21,12 @@ script:
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
+
     packages:
     - build-essential
     - git
     - libgnome-keyring-dev
     - fakeroot
+    - g++-4.8

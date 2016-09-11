@@ -3,6 +3,54 @@
 import MultiListCollection from '../lib/multi-list-collection'
 
 describe('MultiListCollection', () => {
+  it.only('selectItemForKey(item, key, {tail, addToExisting})', () => {
+    const mlc = new MultiListCollection([
+      { key: 'list1', items: ['a', 'b', 'c'] },
+      { key: 'list2', items: ['d', 'e'] },
+      { key: 'list3', items: ['f', 'g', 'h'] }
+    ])
+
+    // initially tail is first item
+    assert.deepEqual(mlc.getTail(), {key: 'list1', item: 'a'})
+
+    // tail is set to 'b'
+    mlc.selectItemForKey('b', 'list1')
+    assert.deepEqual(mlc.getTail(), {key: 'list1', item: 'b'})
+    assert.deepEqual([...mlc.getSelectedItems()], ['b'])
+
+    // addToExisting
+    mlc.selectItemForKey('e', 'list2', {addToExisting: true})
+    assert.deepEqual(mlc.getTail(), {key: 'list1', item: 'b'})
+    assert.deepEqual([...mlc.getSelectedItems()], ['b', 'c', 'd', 'e'])
+
+    mlc.selectItemForKey('d', 'list2', {addToExisting: true})
+    assert.deepEqual(mlc.getTail(), {key: 'list1', item: 'b'})
+    assert.deepEqual([...mlc.getSelectedItems()], ['b', 'c', 'd'])
+
+    // create new tail and addToExisting
+    mlc.selectItemForKey('f', 'list3', {tail: true, addToExisting: true})
+    assert.deepEqual(mlc.getTail(), {key: 'list3', item: 'f'})
+    assert.deepEqual([...mlc.getSelectedItems()], ['b', 'c', 'd', 'f'])
+
+    // addToExisting
+    mlc.selectItemForKey('h', 'list3', {addToExisting: true})
+    assert.deepEqual(mlc.getTail(), {key: 'list3', item: 'f'})
+    assert.deepEqual([...mlc.getSelectedItems()], ['b', 'c', 'd', 'f', 'g', 'h'])
+
+    // addToExisting
+    mlc.selectItemForKey('g', 'list3', {addToExisting: true})
+    assert.deepEqual(mlc.getTail(), {key: 'list3', item: 'f'})
+    assert.deepEqual([...mlc.getSelectedItems()], ['b', 'c', 'd', 'f', 'g'])
+
+    // new tail without addToExisting
+    mlc.selectItemForKey('e', 'list2', {tail: true})
+    assert.deepEqual(mlc.getTail(), {key: 'list2', item: 'e'})
+    assert.deepEqual([...mlc.getSelectedItems()], ['e'])
+  })
+
+  // toggleItemForKey
+    // when this.tail should be set to null
+
   describe('selectItemsAndKeysInRange(endPoint1, endPoint2)', () => {
     it('takes endpoints ({key, item}) and returns an array of items between those points', () => {
       const mlc = new MultiListCollection([

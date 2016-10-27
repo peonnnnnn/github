@@ -14,6 +14,7 @@
   },
   "atomTestRunner": "./test/runner",
   "dependencies": {
+    "adrenaline": "^1.0.1",
     "compare-sets": "^1.0.1",
     "diff": "2.2.2",
     "etch": "0.8.0",
@@ -21,6 +22,8 @@
     "git-kitchen-sink": "1.11.0",
     "multi-list-selection": "^0.1.1",
     "nsfw": "1.0.12",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
     "recursive-readdir": "^2.0.0",
     "what-the-diff": "^0.1.1"
   },

@@ -1,0 +1,19 @@
+{
+  "sourceMaps": "inline",
+  "plugins": [
+    "./relay-babel.js",
+    "transform-object-rest-spread",
+    "transform-es2015-modules-commonjs",
+    "transform-async-to-generator",
+    "transform-class-properties",
+    "transform-es2015-destructuring", // https://github.com/babel/babel/issues/4074
+    "transform-es2015-parameters", // same
+    ["transform-runtime", {
+      "polyfill": false,
+      "regenerator": true
+    }],
+  ],
+  "presets": [
+    "react",
+  ]
+}

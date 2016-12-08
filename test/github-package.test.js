@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import temp from 'temp';
 import sinon from 'sinon';
-import {cloneRepository} from './helpers';
+import {cloneRepository, until} from './helpers';
 import GithubPackage from '../lib/github-package';
 
 describe('GithubPackage', () => {
@@ -38,7 +38,7 @@ describe('GithubPackage', () => {
   });
 
   describe('didChangeProjectPaths()', () => {
-    it('updates the active repository', async () => {
+    it.only('updates the active repository', async () => {
       const workdirPath1 = await cloneRepository('three-files');
       const workdirPath2 = await cloneRepository('three-files');
       const nonRepositoryPath = temp.mkdirSync();
@@ -46,19 +46,22 @@ describe('GithubPackage', () => {
       project.setPaths([workdirPath1, workdirPath2, nonRepositoryPath]);
       fs.writeFileSync(path.join(workdirPath1, 'a.txt'), 'change 1', 'utf8');
 
+      await githubPackage.activate();
+
       sinon.spy(githubPackage, 'rerender');
       await workspace.open(path.join(workdirPath1, 'a.txt'));
       await githubPackage.didChangeProjectPaths();
       assert.equal(githubPackage.getActiveRepository(), await githubPackage.repositoryForWorkdirPath(workdirPath1));
-      assert.equal(githubPackage.changeObserver.getActiveRepository(), githubPackage.getActiveRepository());
+      await until(() => githubPackage.changeObserver.getActiveRepository() === githubPackage.getActiveRepository());
       assert.equal(githubPackage.rerender.callCount, 1);
 
       // Remove repository for open file
+      githubPackage.rerender.reset()
       project.setPaths([workdirPath2, nonRepositoryPath]);
       await githubPackage.didChangeProjectPaths();
       assert.isNull(githubPackage.getActiveRepository());
       assert.isNull(githubPackage.changeObserver.getActiveRepository());
-      assert.equal(githubPackage.rerender.callCount, 2);
+      assert.equal(githubPackage.rerender.callCount, 1);
 
       await workspace.open(path.join(workdirPath2, 'b.txt'));
       await githubPackage.didChangeProjectPaths();

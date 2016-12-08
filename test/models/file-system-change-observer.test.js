@@ -13,6 +13,45 @@ describe('FileSystemChangeObserver', () => {
     this.timeout(5000); // increase the timeout because we're interacting with file system events.
   });
 
+  it('does not allow overlapping starts/stops (thus leaking watchers)', async () => {
+    const workdirPath1 = await cloneRepository('three-files');
+    const repository1 = await buildRepository(workdirPath1);
+    const workdirPath2 = await cloneRepository('three-files');
+    const repository2 = await buildRepository(workdirPath2);
+    const workdirPath3 = await cloneRepository('three-files');
+    const repository3 = await buildRepository(workdirPath3);
+    const changeObserver = new FileSystemChangeObserver();
+
+    const startWatch = changeObserver.watchActiveRepository.bind(changeObserver)
+    const stopWatch = changeObserver.stopCurrentFileWatcher.bind(changeObserver)
+
+    const events = []
+    const wrap = (fn, event, getRepo) => (...args) => {
+      events.push(event)
+      return fn(...args)
+    };
+
+    changeObserver.watchActiveRepository = wrap(startWatch, 'start', (co) => co.activeRepository)
+    changeObserver.stopCurrentFileWatcher = wrap(stopWatch, 'stop', (co) => co.currentFileWatcher && co.currentFileWatcher.activeRepository)
+
+    const p1 = changeObserver.setActiveRepository(repository1)
+    const p2 = changeObserver.setActiveRepository(repository2)
+    const p3 = changeObserver.setActiveRepository(repository3)
+    await Promise.all([p1, p2, p3])
+
+    assert.equal(changeObserver.activeRepository, repository3)
+
+    let nextExpected = 'stop'
+    for (idx in events) {
+      const event = events[idx]
+      if (nextExpected === event) {
+        nextExpected = event === 'start' ? 'stop' : 'start'
+      } else {
+        throw new Error(`Expected event at index ${idx} to be ${nextExpected} but it was ${event}`)
+      }
+    }
+  })
+
   it('emits an event when the currently active directory changes', async () => {
     const workdirPath1 = await cloneRepository('three-files');
     const repository1 = await buildRepository(workdirPath1);
@@ -21,7 +60,6 @@ describe('FileSystemChangeObserver', () => {
     const changeSpy = sinon.spy();
     const changeObserver = new FileSystemChangeObserver();
     changeObserver.onDidChange(changeSpy);
-    await changeObserver.start();
 
     await changeObserver.setActiveRepository(repository1);
     fs.writeFileSync(path.join(workdirPath1, 'a.txt'), 'a change\n');
@@ -45,7 +83,7 @@ describe('FileSystemChangeObserver', () => {
 
     changeSpy.reset();
     await changeObserver.setActiveRepository(repository1);
-    await changeObserver.stop();
+    await changeObserver.stopCurrentFileWatcher();
     fs.writeFileSync(path.join(workdirPath1, 'd.txt'), 'a change\n');
     await Promise.race([changeObserver.lastFileChangePromise, timeout(500)]);
     assert.isTrue(!changeSpy.called);
@@ -57,7 +95,6 @@ describe('FileSystemChangeObserver', () => {
     const changeSpy = sinon.spy();
     const changeObserver = new FileSystemChangeObserver();
     changeObserver.onDidChange(changeSpy);
-    await changeObserver.start();
 
     await changeObserver.setActiveRepository(repository);
     fs.writeFileSync(path.join(workdirPath, 'a.txt'), 'a change\n');
@@ -81,7 +118,6 @@ describe('FileSystemChangeObserver', () => {
     const changeSpy = sinon.spy();
     const changeObserver = new FileSystemChangeObserver();
     changeObserver.onDidChange(changeSpy);
-    await changeObserver.start();
     await changeObserver.setActiveRepository(repository);
 
     fs.writeFileSync(path.join(workdirPath, 'a.txt'), 'a change\n');
@@ -101,7 +137,6 @@ describe('FileSystemChangeObserver', () => {
     const changeSpy = sinon.spy();
     const changeObserver = new FileSystemChangeObserver();
     changeObserver.onDidChange(changeSpy);
-    await changeObserver.start();
     await changeObserver.setActiveRepository(repository);
 
     await repository.git.exec(['checkout', '-b', 'new-branch']);
@@ -115,7 +150,6 @@ describe('FileSystemChangeObserver', () => {
     const changeSpy = sinon.spy();
     const changeObserver = new FileSystemChangeObserver();
     changeObserver.onDidChange(changeSpy);
-    await changeObserver.start();
     await changeObserver.setActiveRepository(repository);
 
     await repository.git.exec(['commit', '--allow-empty', '-m', 'new commit']);
@@ -133,7 +167,6 @@ describe('FileSystemChangeObserver', () => {
     const changeSpy = sinon.spy();
     const changeObserver = new FileSystemChangeObserver();
     changeObserver.onDidChange(changeSpy);
-    await changeObserver.start();
     await changeObserver.setActiveRepository(repository);
 
     await repository.git.exec(['checkout', '-b', 'new-branch']);
@@ -151,7 +184,6 @@ describe('FileSystemChangeObserver', () => {
     const changeSpy = sinon.spy();
     const changeObserver = new FileSystemChangeObserver();
     changeObserver.onDidChange(changeSpy);
-    await changeObserver.start();
     await changeObserver.setActiveRepository(repository);
 
     await repository.git.exec(['fetch', 'origin', 'master']);

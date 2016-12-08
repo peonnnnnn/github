@@ -8,8 +8,8 @@ import {cloneRepository, buildRepository} from '../helpers';
 import WorkspaceChangeObserver from '../../lib/models/workspace-change-observer';
 
 // This class only works on Linux
-if (process.platform === 'linux') {
-  describe('WorkspaceChangeObserver', () => {
+if (process.platform !== 'linux') {
+  xdescribe('WorkspaceChangeObserver', () => {
     let atomEnv, workspace;
 
     beforeEach(() => {
@@ -20,6 +20,10 @@ if (process.platform === 'linux') {
     afterEach(() => {
       atomEnv.destroy();
     });
+
+    it('does not allow overlapping starts/stops (thus leaking watchers)', () => {
+      // ...
+    })
 
     it('emits a change event when the window is focused', async () => {
       const changeSpy = sinon.spy();

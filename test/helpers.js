@@ -167,6 +167,9 @@ afterEach(function() {
   activeRenderers.forEach(r => r.unmount());
   activeRenderers = [];
   global.sinon.restore();
+
+  RendererProcessManager.reset();
+
 });
 
 // eslint-disable-next-line jasmine/no-global-setup

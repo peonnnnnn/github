@@ -1250,7 +1250,8 @@ describe('Repository', function() {
         );
 
         sub.add(observer.onDidChange(events => {
-          repository.observeFilesystemChange(events);
+          const paths = events.map(e => path.join(e.directory, e.file || e.newFile));
+          repository.observeFilesystemChange(paths);
           observedEvents.push(...events);
           eventCallback();
         }));

@@ -17,7 +17,7 @@ import {
 } from '../helpers';
 import {writeFile} from '../../lib/helpers';
 
-describe('Repository', function() {
+describe.only('Repository', function() {
   it('delegates all state methods', function() {
     const missing = expectedDelegates.filter(delegateName => {
       return Repository.prototype[delegateName] === undefined;

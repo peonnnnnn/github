@@ -43,24 +43,28 @@ describe('StagingView', function() {
     });
 
     describe('confirmSelectedItems()', function() {
-      it('calls attemptFileStageOperation with the paths to stage/unstage and the staging status', async function() {
+      it.only('calls attemptFileStageOperation with the paths to stage/unstage and the staging status', async function() {
         const filePatches = [
           {filePath: 'a.txt', status: 'modified'},
           {filePath: 'b.txt', status: 'deleted'},
         ];
         const attemptFileStageOperation = sinon.spy();
+        const didSelectFilePath = sinon.spy();
         const view = new StagingView({
           commandRegistry,
           workingDirectoryPath,
           unstagedChanges: filePatches,
           stagedChanges: [],
           attemptFileStageOperation,
+          didSelectFilePath,
         });
 
         view.mousedownOnItem({button: 0}, filePatches[1]);
         view.mouseup();
         view.confirmSelectedItems();
         assert.isTrue(attemptFileStageOperation.calledWith(['b.txt'], 'unstaged'));
+        console.log(didSelectFilePath);
+        assert.equal(didSelectFilePath.args[0][0], 'a.txt');
 
         attemptFileStageOperation.reset();
         await view.update({unstagedChanges: [filePatches[0]], stagedChanges: [filePatches[1]], attemptFileStageOperation});

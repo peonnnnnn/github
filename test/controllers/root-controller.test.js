@@ -1317,6 +1317,10 @@ import RootController from '../../lib/controllers/root-controller';
           });
         });
       });
+
+      it('shows the next diff after staging/unstaging a file', function() {
+
+      });
     });
   });
 });

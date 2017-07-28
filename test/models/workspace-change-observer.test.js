@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs'
 
 import until from 'test-until';
 
@@ -52,7 +53,8 @@ describe('WorkspaceChangeObserver', function() {
   it('emits a change event when a buffer belonging to the project directory changes', async function() {
     const workdirPath = await cloneRepository('three-files');
     const repository = await buildRepository(workdirPath);
-    const editor = await workspace.open(path.join(workdirPath, 'a.txt'));
+    const filePath = path.join(workdirPath, 'a.txt')
+    const editor = await workspace.open(filePath);
 
     const changeSpy = sinon.spy();
     const changeObserver = new WorkspaceChangeObserver(window, workspace, repository);
@@ -64,7 +66,7 @@ describe('WorkspaceChangeObserver', function() {
     await until(() => changeSpy.calledOnce);
 
     changeSpy.reset();
-    editor.getBuffer().reload();
+    fs.writeFileSync(filePath, 'another-change')
     await until(() => changeSpy.calledOnce);
 
     changeSpy.reset();

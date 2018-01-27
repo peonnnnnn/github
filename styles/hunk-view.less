@@ -1,26 +1,25 @@
 @import "ui-variables";
 
-@hunk-fg-color: @text-color-subtle;
+@hunk-fg-color: var(--fg-subtle);
 @hunk-bg-color: @pane-item-background-color;
 
 .github-HunkView {
   font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace;
-  border-bottom: 1px solid @pane-item-border-color;
-  background-color: @hunk-bg-color;
+  border-bottom: 1px solid var(--border);
 
   &-header {
     display: flex;
     align-items: stretch;
     font-size: .9em;
-    background-color: @panel-heading-background-color;
-    border-bottom: 1px solid @panel-heading-border-color;
+    background-color: var(--bg-highlight);
+    border-bottom: 1px solid var(--border);
   }
 
   &-title {
     flex: 1;
     line-height: 2.4;
     padding: 0 @component-padding;
-    color: @text-color-subtle;
+    color: var(--fg-subtle);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -32,13 +31,13 @@
     line-height: 1;
     padding-left: @component-padding;
     padding-right: @component-padding;
-    font-family: @font-family;
+    font-family: var(--font-family);
+    color: inherit;
     border: none;
-    border-left: 1px solid @panel-heading-border-color;
+    border-left: 1px solid var(--border);
     background-color: transparent;
     cursor: default;
-    &:hover  { background-color: @button-background-color-hover; }
-    &:active { background-color: @panel-heading-border-color; }
+    &:active { background-color: var(--border); }
   }
 
   // pixel fit the icon
@@ -62,7 +61,7 @@
     overflow: hidden;
     padding: 0 .5em;
     text-align: right;
-    border-right: 1px solid @base-border-color;
+    border-right: 1px solid var(--border);
     -webkit-font-smoothing: antialiased;
   }
 
@@ -94,17 +93,18 @@
 // -------------------------------
 
 .github-HunkView.is-selected.is-hunkMode .github-HunkView-header {
-  background-color: @background-color-selected;
+  background-color: var(--bg-selected);
   .github-HunkView-title {
-    color: @text-color;
+    color: var(--fg-strong);
   }
   .github-HunkView-stageButton, .github-HunkView-discardButton {
-    border-color: mix(@text-color, @background-color-selected, 25%);
+    color: var(--fg-strong);
+    border-color: var(--border);
   }
 }
 
 .github-HunkView-title:hover {
-  color: @text-color-highlight;
+  color: var(--fg-strong);
 }
 
 .github-HunkView-line {
@@ -112,29 +112,32 @@
   // mixin
   .hunk-line-mixin(@fg; @bg) {
     &:hover {
-      background-color: @background-color-highlight;
+      background-color: var(--bg-highlight);
     }
     &.is-selected {
-      color: @text-color;
-      background-color: @background-color-selected;
+      color: var(--fg-strong);
+      // background-color: var(--bg-selected);
     }
     .github-HunkView-lineContent {
-      color: saturate( mix(@fg, @text-color-highlight, 20%), 20%);
-      background-color: saturate( mix(@bg, @hunk-bg-color, 15%), 20%);
+      color: @fg;
+      background-color: @bg;
     }
     // hightlight when focused + selected
     .github-FilePatchView:focus &.is-selected .github-HunkView-lineContent  {
-      color: saturate( mix(@fg, @text-color-highlight, 10%), 10%);
-      background-color: saturate( mix(@bg, @hunk-bg-color, 25%), 10%);
+      // color: var(--fg-strong);
+      // background-color: var(--bg-highlight);
+    }
+    .github-FilePatchView:focus &.is-selected  {
+      background-color: var(--bg-selected);
     }
   }
 
   &.is-deleted {
-    .hunk-line-mixin(@text-color-error, @background-color-error);
+    .hunk-line-mixin( var(--error-fg), var(--error-bg-faded) );
   }
 
   &.is-added {
-    .hunk-line-mixin(@text-color-success, @background-color-success);
+    .hunk-line-mixin( var(--success-fg), var(--success-bg-faded) );
   }
 
   // divider line between added and deleted lines
@@ -149,18 +152,17 @@
   .github-HunkView.is-selected.is-hunkMode .github-HunkView-title,
   .github-HunkView.is-selected.is-hunkMode .github-HunkView-header,
   .github-HunkView-line.is-selected .github-HunkView-lineNumber {
-    color: contrast(@button-background-color-selected);
-    background: @button-background-color-selected;
+    color: var(--state-fg);
+    background: var(--accent-bg);
   }
   .github-HunkView-line.is-selected .github-HunkView-lineNumber {
-    border-color: mix(@button-border-color, @button-background-color-selected, 25%);
+    border-color: var(--border);
   }
   .github-HunkView.is-selected.is-hunkMode .github-HunkView {
     &-stageButton,
     &-discardButton {
-      border-color: mix(@hunk-bg-color, @button-background-color-selected, 30%);
-      &:hover  { background-color: mix(@hunk-bg-color, @button-background-color-selected, 10%); }
-      &:active { background-color: @button-background-color-selected; }
+      border-color: var(--border);
+      &:active { opacity: .65; }
     }
   }
 }

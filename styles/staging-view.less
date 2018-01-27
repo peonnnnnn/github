@@ -16,8 +16,8 @@
     align-items: center;
     padding: 0 0 0 @component-padding;
     font-weight: 600;
-    border-top: 1px solid @panel-heading-border-color;
-    border-bottom: 1px solid @panel-heading-border-color;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
 
     .github-StagingView-group:first-child & {
       border-top: none;
@@ -26,7 +26,7 @@
     .icon {
       text-align: center;
       &:before {
-        color: @text-color-subtle;
+        color: var(--fg-subtle);
         margin-right: @component-padding / 1.2;
         vertical-align: middle;
       }
@@ -38,17 +38,18 @@
     border: none;
     padding: 0 @component-padding;
     font-weight: normal;
-    border-left: 1px solid @panel-heading-border-color;
+    color: inherit;
+    border-left: 1px solid var(--border);
     white-space: nowrap;
     background: none;
     cursor: default;
 
     &:disabled {
-      color: @text-color-subtle;
+      color: var(--fg-subtle);
     }
 
     &:active {
-      background-color: @button-background-color-hover;
+      opacity: .65;
     }
 
     &.icon:before {
@@ -59,7 +60,7 @@
 
     &--fullWidth {
       border-left: none;
-      border-bottom: 1px solid @panel-heading-border-color;
+      border-bottom: 1px solid var(--border);
     }
   }
 
@@ -90,12 +91,12 @@
 
 .github-StagingView-group.is-focused .is-selected {
   // is selected
-  color: @text-color-selected;
-  background: @background-color-selected;
+  color: var(--fg-strong);
+  background: var(--bg-selected);
 
   // also has focus
   .github-StagingView:focus & {
-    color: contrast(@button-background-color-selected);
-    background: @button-background-color-selected;
+    color: var(--state-fg);
+    background: var(--accent-bg);
   }
 }

@@ -26,8 +26,8 @@
   .pinned-pr-info {
     display: flex;
     padding: @component-padding;
-    border: 1px solid @text-color-subtle;
-    border-radius: @component-border-radius;
+    border: 1px solid var(--fg-subtle);
+    border-radius: var(--border-radius);
     margin-bottom: @component-padding * 2;
 
     a {
@@ -53,13 +53,13 @@
   }
 
   .pr-link a {
-    color: @text-color-subtle;
+    color: var(--fg-subtle);
     word-break: break-all;
   }
 
   .refresh-button {
     .icon {
-      color: @text-color-subtle;
+      color: var(--fg-subtle);
       cursor: pointer;
 
       &.refreshing::before {
@@ -87,13 +87,13 @@
 
   .author-avatar {
     max-height: @avatar-size;
-    border-radius: @component-border-radius;
+    border-radius: var(--border-radius);
   }
 
   .pr-title {
     margin: 0;
     line-height: 1.2;
-    color: @text-color-highlight;
+    color: var(--fg-strong);
   }
 
   // Status ------------------------
@@ -121,7 +121,7 @@
   .label {
     padding: 0 @label-padding;
     margin: 0 @label-padding @label-padding 0;
-    border-radius: @component-border-radius;
+    border-radius: var(--border-radius);
     line-height: 2em;
     display: inline-block;
   }
@@ -138,7 +138,7 @@
   // Statuses ------------------------
 
   .github-PrStatuses {
-    border-top: 1px solid @base-border-color;
+    border-top: 1px solid var(--border);
     padding-top: @component-padding * 2;
   }
 
@@ -150,7 +150,7 @@
   .file-count,
   .reactions,
   .labels {
-    border-top: 1px solid @base-border-color;
+    border-top: 1px solid var(--border);
     padding: @component-padding 0;
   }
 

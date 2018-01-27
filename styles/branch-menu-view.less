@@ -26,7 +26,7 @@
     flex-basis: 16px;
     flex-grow: 0;
     flex-shrink: 0;
-    color: @text-color-subtle;
+    color: var(--fg-subtle);
   }
 
   .icon-git-branch::before {
@@ -57,7 +57,7 @@
       text-align: left;
     }
     atom-text-editor[readonly] {
-      color: @text-color-subtle;
+      color: var(--fg-subtle);
       pointer-events: none;
     }
   }
@@ -70,8 +70,8 @@
     white-space: normal;
     text-align: left;
     overflow-y: auto;
-    border: 1px solid @base-border-color;
-    border-radius: @component-border-radius;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
     background-color: @inset-panel-background-color;
 
     &:empty {

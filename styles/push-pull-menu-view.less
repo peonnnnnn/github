@@ -17,7 +17,7 @@
   // margin not needed, .github-PushPullMenuView-item takes care of the spacing
   .icon-mark-github::before {
     margin-right: 0;
-    color: @text-color-subtle;
+    color: var(--fg-subtle);
   }
 
   // Make Pull/Push buttons take up available space
@@ -42,8 +42,8 @@
     white-space: normal;
     text-align: left;
     overflow-y: auto;
-    border: 1px solid @base-border-color;
-    border-radius: @component-border-radius;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
     background-color: @inset-panel-background-color;
 
     &:empty {

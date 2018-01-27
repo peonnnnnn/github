@@ -21,14 +21,14 @@
 
   &-pinButton {
     padding: @component-padding;
-    border-bottom: 1px solid @base-border-color;
+    border-bottom: 1px solid var(--border);
     cursor: default;
   }
 
   // TODO: Simplify selector
   &-pinButton + &-Subview {
     padding: @component-padding;
-    border-bottom: 1px solid @base-border-color;
+    border-bottom: 1px solid var(--border);
   }
 
   &-Subview {
@@ -45,7 +45,7 @@
     .icon-git-pull-request:before {
       width: auto;
       font-size: 48px;
-      color: @text-color-subtle;
+      color: var(--fg-subtle);
     }
 
     p {

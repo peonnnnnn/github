@@ -14,7 +14,7 @@
     align-items: center;
     padding: @component-padding/2;
     padding-left: @component-padding;
-    border-bottom: 1px solid @base-border-color;
+    border-bottom: 1px solid var(--border);
 
     .btn {
       font-size: .9em;
@@ -61,19 +61,19 @@
 
   &-meta {
     padding: @component-padding;
-    border-bottom: 1px solid @base-border-color;
+    border-bottom: 1px solid var(--border);
   }
 
   &-metaContainer {
-    border: 1px solid @base-border-color;
-    border-radius: @component-border-radius;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
   }
 
   &-metaHeader {
     display: flex;
     align-items: center;
     padding: @component-padding;
-    background-color: @background-color-highlight;
+    background-color: var(--bg-highlight);
   }
 
   &-metaTitle {
@@ -107,14 +107,14 @@
     margin: 0 .2em;
     padding: .2em .4em;
     line-height: 1.6;
-    border-radius: @component-border-radius;
+    border-radius: var(--border-radius);
     &--added {
-      color: mix(@text-color-highlight, @text-color-success, 40%);
-      background-color: mix(@base-background-color, @background-color-success, 80%);
+      color: var(--success-fg);
+      background-color: var(--bg-highlight);
     }
     &--removed {
-      color: mix(@text-color-highlight, @text-color-error, 40%);
-      background-color: mix(@base-background-color, @background-color-error, 80%);
+      color: var(--error-fg);
+      background-color: var(--bg-highlight);;
     }
     &--fullWidth {
       display: block;
@@ -132,7 +132,7 @@
       line-height: 1;
       vertical-align: middle;
       word-break: break-all;
-      background-color: @base-background-color;
+      background-color: var(--bg-selected);
     }
   }
 
